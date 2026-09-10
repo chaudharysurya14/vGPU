@@ -1,0 +1,354 @@
+admin2 user command:
+
+   1  sudo vim /etc/modprobe.d/blacklist-nouveau.conf
+       blacklist nouveau
+       options nouveau modeset=0
+  :wq!
+
+   2  sudo dracut --force
+   3  systemctl disable gdm.service
+   4  sudo systemctl disable gdm.service
+   5  sudo -i
+       sudo reboot
+
+root command:
+   6   configure repo 
+   7   reboot now
+   8   yum install gcc make
+   9   dnf install kernel-devel-$(uname -r) kernel-headers-$(uname -r)
+   #   dnf install kernel-devel-matched-$(uname -r)   --> for vGPU only
+   10  ./NVIDIA-Linux-x86_64-535.183.06.run
+   11  nvidia-smi
+   12  ./cuda.run
+       rpm -ivh cuda-repo-rhel9-13-2-local-13.2.0_595.45.04-1.x86_64.rpm     --> for vGPU only
+       dnf clean all     --> for vGPU only
+       dnf install cuda-toolkit-13-2     --> for vGPU only
+   13  nvcc --version
+   14  rpm -ivh nvidia-container-toolkit-base-1.15.0-1.x86_64.rpm
+   15  rpm -ivh nvidia-container-toolkit-1.15.0-1.x86_64.rpm
+   error   nvcc command not found
+
+# Add this files into .bashrc for nvcc command not found error
+export PATH="/usr/local/cuda-12.5/bin:$PATH"
+export LD_LIBRARY_PATH="/usrlocal/cuda-12.5/lib64:$LD_LIBRARY_PATH"
+
+
+# We need to install docker and nvidia-container tookit (so that we can access the gpu ie. nvidia-smi inside docker container)
+ sudo  nvidia-ctk runtime --configure --runtime=docker
+
+========================toolkit rpm package can be found here=========================
+/home/admin2/gpu_tools/GPU-setup/Nvidia_GPU_setup/nvidia_container_toolkit/nvidia-container-toolkit-1.15.0-1.x86_64.rpm
+/home/admin2/gpu_tools/GPU-setup/Nvidia_GPU_setup/nvidia_container_toolkit/nvidia-container-toolkit-base-1.15.0-1.x86_64.rpm
+
+==============================vGPU VM commands=========================================
+    1  nmtui
+    2  ping 172.17.12.1
+    3  nmtui hostname
+    4  bash
+    5  nmtui
+    6  vim /etc/modprobe.d/blacklist-nouveau.conf
+    7  dracut --force
+    8  systemctl disable gdm.service
+    9  systemctl stop gdm.service
+   10  systemctl disable gdm.service
+   11  lsblk
+   12  mkdir /cdrom
+   13  mount /dev/sr0 /cdrom/
+   14  df -Th
+   15  cat >> /etc/fstab
+   16  cd /etc/yum.repos.d/
+   17  ls
+   18  dnf clean all
+   19  dnf repolist all
+   20  dnf list all
+   21  reboot
+   22  yum install gcc make
+   23  dnf install kernel-devel-matched-$(uname -r)
+   24  ls
+   25  rpm -ivh dkms-3.4.2-1.el9.noarch.rpm
+   26  dnf install patch
+   27  rpm -ivh dkms-3.4.2-1.el9.noarch.rpm
+   28  reboot
+   29  rpm -ivh nvidia-linux-grid-595-595.71.05-1.x86_64.rpm
+   30  nvidia-smi
+   31  reboot
+   32  nvidia-smi
+   33  service nvidia-gridd restart
+   34  nvidia-smi -q | more
+   35  nvcc --version
+   36  ls
+   37  mkdir GPU_PKG
+   38  mv dkms-3.4.2-1.el9.noarch.rpm nvidia-linux-grid-595-595.71.05-1.x86_64.rpm GPU_PKG/
+   39  ls
+   40  mv cuda_13.0.0_580.65.06_linux.run GPU_PKG/
+   41  cd GPU_PKG/
+   42  ls
+   43  chmod +x cuda_13.0.0_580.65.06_linux.run
+   44  ls
+   45  cd ..
+   46  ls
+   47  rpm -ivh cuda-repo-rhel9-13-2-local-13.2.0_595.45.04-1.x86_64.rpm
+   48  nvcc --version
+   49  cd /usr/local/
+   50  ls
+   51  reboot
+   52  ls
+   53  scp -r GPU_PKG/ root@172.17.12.110:/root/
+   54  ls
+   55  cd GPU_PKG/
+   56  ls
+   57  cd ..
+   58  ls
+   59  cd ..
+   60  ls
+   61  cd /home/admin2/
+   62  ls
+   63  cd /root/
+   64  ls
+   65  ssh pd-ws@172.24.0.109
+   66  ls
+   67  cd GPU_PKG/
+   68  ls
+   69  ./cuda_13.0.0_580.65.06_linux.run
+   70  cuda_13.0.0_580.65.06_linux.run
+   71  source cuda_13.0.0_580.65.06_linux.run
+   72  yum  install gpu_burn
+   73  yum  install burn
+   74  ls
+   75  nvidia-smi
+   76  nvcc --version
+   77  cd /usr/local/
+   78  ls
+   79  cd
+   80  ls
+   81  mv cuda-repo-rhel9-13-2-local-13.2.0_595.45.04-1.x86_64.rpm GPU_PKG/
+   82  ls
+   83  cd GPU_PKG/
+   84  ls
+   85  ./cuda_13.0.0_580.65.06_linux.run
+   86  nvcc --version
+   87  ls
+   88  cat /etc/os-release
+   89  rpm -qa | grep -Ei 'cuda | nvcc | nvidia'
+   90  ls -lah /usr/local/
+   91  cd /etc/yum.repos.d/
+   92  ls
+   93  ll
+   94  cat cuda-rhel9-13-2-local.repo
+   95  cd /var/cuda-repo-rhel9-13-2-local/
+   96  ls
+   97  dnf clean all
+   98  dnf install cuda-toolkit-13-2
+   99  nvcc --version
+  100  cd /usr/local/
+  101  ls
+  102  cd
+  103  cd /usr/local/
+  104  cd cuda-13.2/
+  105  ls
+  106  vim /root/.bashrc
+  107  source /root/.bashrc
+  108  nvcc --version
+  109  cd
+  110  ls
+  111  cd nvidia_container_toolkit/
+  112  ls
+  113  rpm -ivh *
+  114  cd ..
+  115  ls
+  116  cd ipcv_docker_pkg/
+  117  ls
+  118  rpm -ivh *
+  119  docker --version
+  120  container-toolkit  --version
+  121  cd
+  122  ls
+  123  l
+  124  ls
+  125  mv nvidia_container_toolkit Hardening_Script ipcv_docker_pkg GPU_PKG/
+  126  cd GPU_PKG/
+  127  ls
+  128  cd Hardening_Script/
+  129  ls
+  130  bash l1_script.sh
+  131  nvidia-smi
+  132  nvcc --version
+  133  bash l2_script.sh
+  134  cd
+  135  nvidia-smi
+  136  nvcc --version
+  137  ls
+  138  cd GPU_UTILS_FRS/
+  139  ls
+  140  cd FRS_github/
+  141  ls
+  142  cd
+  143  cd GPU_UTILS_FRS/FRS_github/frs_pune-main-deployment-frs/
+  144  ls
+  145  cd deployment/
+  146  ls
+  147  init 0
+  148  mount -a
+  149  vim /etc/fstab
+  150  vim /dev/mapper/
+  151  cd /dev/mapper/
+  152  ls
+  153  lsblk
+  154  ll
+  155  cd ..
+  156  ls
+  157  ls | grep dm
+  158  lsblk
+  159  pvcreate /dev/sdb
+  160  vgextend rhel /dev/sdb
+  161  vgs
+  162  lvcreate rhel -n var -L +49.9G
+  163  lsblk
+  164  mount /dev/mapper/rhel-var /var
+  165  mkfs.xfs /dev/mapper/rhel-var
+  166  mount /dev/mapper/rhel-var /var
+  167  vim /etc/fstab
+  168  reboot
+  169  lsblk
+  170  nvidia-smi
+  171  nvcc --version
+  172  docker -v
+  173  toolkit -v
+  174  systemctl --list-unit
+  175  systemctl --list-units
+  176  systemctl --list-utils
+  177  top
+  178  systemctl list-units --type=service
+  179  systemctl list-units --type=service | grep -i toolkit
+  180  systemctl list-units --type=service | grep -i container
+  181  systemctl list-units --type=service | grep -i docker
+  182  systemctl list-units --type=service | more
+  183  ll
+  184  history
+  185  cd /etc/nvidia/ClientConfigToken/
+  186  ls
+  187  ll
+  188  cd /etc/yum.repos.d/
+  189  ll
+  190  cat cuda-rhel9-13-2-local.repo
+  191  cd var/cuda-repo-rhel9-13-2-local
+  192  ls
+  193  cd /var/cuda-repo-rhel9-13-2-local
+  194  ll
+  195  cat cuda-rhel9-13-2-local.repo
+  196  cd /var/
+  197  ls
+  198  cd /cdrom/BaseOS/
+  199  ls
+  200  cd Packages/
+  201  ll
+  202  history | more
+
+
+==============================vGPU host commands=========================================
+   0 vmware -vl
+   1 esxcli software vib install -d /vmfs/volumes/datastore1/NVIDIA-AI-Enterprise-vSphere-8.0-595.71.03-595.71.05-596.36.zip
+   2 esxcli software vib install -d /vmfs/volumes/datastore1/Host_Drivers/vib20/NVD-AIE_ESXi_8.0.0_Driver/NVD_bootbank_NVD-AIE_ESXi_8.0.0_Driver_595.71.03-1OEM.800.1.0.20613240.vib
+   3 esxcli software vib install -v /vmfs/volumes/datastore1/Host_Drivers/vib20/NVD-AIE_ESXi_8.0.0_Driver/NVD_bootbank_NVD-AIE_ESXi_8.0.0_Driver_595.71.03-1OEM.800.1.0.20613240.vib
+   4 rm /tardisk/nvd_boot.v00
+   5 rm /tardisks/nvd_boot.v00
+   6 esxcli software vib list | grep -i nvidia
+   7 esxcli hardware pci list | grep -i -A20 -B5 nvidia
+   8 esxcli software vib list | grep -i nvidia
+   9 nvidia-smi
+  10 esxcli software vib list
+  11 esxcli software vib list } grep - -E 'nvidia|amd|gpu'
+  12 esxcli software vib list grep - -E 'nvidia|amd|gpu'
+  13 esxcli software vib list | grep - -E 'nvidia|amd|gpu'
+  14 esxcli software vib list | grep -i -E 'nvidia|amd|gpu'
+  15 /etc/init.d/nvdGpuMgmtDaemon stop
+  16 esxcli software vib install -v /vmfs/volumes/datastore1/Host_Drivers/vib20/NVD-AIE_ESXi_8.0.0_Driver/NVD_bootbank_NVD-AIE_ESXi_8.0.0_Driver_595.71.03-1OEM.800.1.0.20613240.vib
+  17 esxcli software vib install -d /vmfs/volumes/datastore1/NVIDIA-AI-Enterprise-vSphere-8.0-595.71.03-595.71.05-596.36.zip
+  18 nvidia-smi
+  19 ping 172.17.183.51
+  20 dcui
+  21 vmkLoad_mod -I | grep nvidia
+  22 vmkload_mod -I | grep nvidia
+  23 vmkload_mod -l | grep nvidia
+  24 /etc/init.d/nvdGpuMgmtDaemon status
+  25 /etc/init.d/nvdGpuMgmtDaemon restart
+  26 /etc/init.d/nvdGpuMgmtDaemon status
+  27 nvidia-smi
+  28 ls
+  29 cd
+  30 ls
+  31 cd vmimages/
+  32 ls
+  33 cd
+  34 history
+  35 nvidia-smi
+  36 cd /vmfs/volumes/datastore1\ \(1\)/Host_Drivers/
+  37 ls
+  38 ll
+  39 cd vib20/
+  40 ls
+  41 cd NVD-AIE_ESXi_8.0.0_Driver/
+  42 ls
+  43 nvidia -smi
+  44 nvidia-smi
+  45 lspci
+  46 lspci | grep nvidia
+  47 lspci | grep -i  nvidia
+  48 lspci | grep -i  nvidia | wc -l
+  49 lspci | grep -i  nvidia
+  50 hostname
+  51 hostname -I
+  52 ip a
+  53 ipconfig
+  54 iproute -a
+  55 ping 172.17.12.109
+  56 ping 172.17.12.108
+  57 ping 172.17.12.107
+  58 ping 172.17.12.106
+  59 ping 172.17.12.105
+  60 ping 172.17.12.1
+  61 ls
+  62 ll
+  63 cd ..
+  64 ls
+  65 cd ..
+  66 ls
+  67 nvidia-smi
+  68    free -h
+  69 lspci | grep NV
+  70 lspci | grep NV | less
+  71 lspci | grep NV |
+  72 lspci | grep NV | less
+  73 lspci | grep NVIDIA
+  74 esxcli software vib list | grep NV
+  75 vmkload_mod -l | grep nvidia
+  76 dmesg | grep -E "NVRM|nvidia"
+  77 dmesg | grep -E "NVRM|nvidia" | less
+  78 /etc/init.d/nvdGpuMgmtDaemon status
+  79 nvidia-smi
+  80 lspci | grep 'nvidia'
+  81 lspci | grep -i 'nvidia'
+  82 lspci | grep -i 'nvidia' | less
+  83 lspci | grep -i 'nvidia' | less
+  84 lspci | grep -i 'nvidia' | awk '{print$1}' | head -n 1
+  85 lspci -s -v $(lspci | grep -i 'nvidia' | awk '{print$1}' | head -n 1)
+  86 lspci -v -s $(lspci | grep -i 'nvidia' | awk '{print$1}' | head -n 1)
+  87 lspci -v $(lspci | grep -i 'nvidia' | awk '{print$1}' | head -n 1)
+  88 lspci -v $(lspci | grep -i 'nvidia' | awk '{print$1}' | head -n 1) | less
+  89 lspci -v $(lspci | grep -i 'nvidia' | awk '{print$1}' | head -n 1) | grep '64bit'
+  90 lspci -v $(lspci | grep -i 'nvidia' | awk '{print$1}' | head -n 1) | grep '64 bit'
+  91 lspci -v $(lspci | grep -i 'nvidia' | awk '{print$1}' | head -n 1) | grep '64'
+  92 lspci -v $(lspci | grep -i 'nvidia' | awk '{print$1}' | head -n 1) | grep -i 'prefetchable'
+  93 lspci -v $(lspci | grep -i 'nvidia' ) | grep -i 'prefetchable'
+  94 lspci -v $(lspci | grep -i 'nvidia' ) | grep -i '64'
+  95 nvidia-smi
+  96 ip a
+  97    free -h
+  98 nvidia-smi
+  99 ls
+ 100 cd vmfs/
+ 101 ls
+ 102 cd volumes/
+ 103 ls
+ 104 history
+
